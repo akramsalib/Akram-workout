@@ -1,0 +1,1068 @@
+<!doctype html>
+<html lang="ar" dir="rtl">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover" />
+  <meta name="color-scheme" content="light dark" />
+  <link rel="icon" href="data:," />
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cairo:wght@500;600;700;800&display=swap" rel="stylesheet">
+  <title>جدول التمرين — 6 أيام</title>
+  <style>
+    :root {
+      color-scheme: light dark;
+      --bg: #f2f5f3;
+      --surface: #ffffff;
+      --surface-2: #e7ece8;
+      --ink: #14231a;
+      --muted: #43554a;
+      --line: #cad4cc;
+      --green: #11683b;
+      --green-2: #d7f5e3;
+      --accent: #d64d26;
+      --accent-2: #ffe2d9;
+      --warning: #8a2d12;
+      --shadow: 0 8px 26px rgba(22, 46, 31, .09);
+      --radius: 18px;
+    }
+    @media (prefers-color-scheme: dark) {
+      :root {
+        --bg: #0d1511;
+        --surface: #16221b;
+        --surface-2: #223129;
+        --ink: #f5faf6;
+        --muted: #c3d0c7;
+        --line: #344a3d;
+        --green: #63d696;
+        --green-2: #163d28;
+        --accent: #ff8a62;
+        --accent-2: #472317;
+        --warning: #ffac8f;
+        --shadow: 0 10px 30px rgba(0,0,0,.28);
+      }
+    }
+    * { box-sizing: border-box; }
+    html { scroll-behavior: smooth; }
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Cairo", sans-serif;
+      font-size: 17px;
+      line-height: 1.65;
+      -webkit-text-size-adjust: 100%;
+    }
+    button, input { font: inherit; }
+    button { -webkit-tap-highlight-color: transparent; }
+    .page { width: min(100%, 980px); margin: 0 auto; padding: 18px 14px 72px; }
+    .hero {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-top: 7px solid var(--accent);
+      border-radius: 10px 10px var(--radius) var(--radius);
+      padding: 22px 18px;
+      box-shadow: var(--shadow);
+    }
+    h1 { margin: 0 0 8px; font-size: clamp(29px, 8vw, 46px); line-height: 1.18; letter-spacing: -.03em; }
+    .hero p { margin: 0; color: var(--muted); font-weight: 700; }
+    .start {
+      margin-top: 14px;
+      display: grid;
+      grid-template-columns: 1fr;
+      gap: 10px;
+    }
+    .coach-note {
+      background: var(--green-2);
+      border-radius: 14px 5px 14px 5px;
+      padding: 14px 15px;
+    }
+    .coach-note strong { display: block; color: var(--green); font-size: 19px; margin-bottom: 4px; }
+    .coach-note p { margin: 0; color: var(--ink); font-size: 15px; font-weight: 600; }
+    .coach-note.progress { background: var(--accent-2); }
+    .coach-note.progress strong { color: var(--accent); }
+    .schedule-line {
+      margin: 13px 0 0;
+      padding-top: 12px;
+      border-top: 1px dashed var(--line);
+      color: var(--muted);
+      font-size: 14px;
+      font-weight: 700;
+    }
+    .tabs-wrap {
+      position: relative;
+      z-index: 10;
+      margin: 16px -14px 18px;
+      padding: 10px 14px;
+      background: color-mix(in srgb, var(--bg) 94%, transparent);
+      backdrop-filter: blur(8px);
+      border-bottom: 1px solid var(--line);
+    }
+    .tabs {
+      display: grid;
+      grid-template-columns: repeat(2, minmax(0, 1fr));
+      gap: 8px;
+    }
+    .tab {
+      min-height: 88px;
+      padding: 8px 9px;
+      border: 1px solid var(--line);
+      border-radius: 11px;
+      background: var(--surface);
+      color: var(--ink);
+      text-align: right;
+      font-weight: 800;
+      cursor: pointer;
+      line-height: 1.32;
+    }
+    .tab span { display: block; font-size: 12px; color: var(--muted); font-weight: 700; }
+    .tab[aria-selected="true"] { background: var(--green); color: #fff; border-color: var(--green); }
+    .tab[aria-selected="true"] span { color: #eafaf0; }
+    .tab.cardio-tab { border-color: var(--green); }
+    .tab.cardio-tab[aria-selected="true"] { background: var(--green); border-color: var(--green); }
+    .tab.food-tab { border-color: var(--accent); }
+    .tab.food-tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); }
+    .tab.taichi-tab { border-color: var(--green); }
+    .tab.taichi-tab[aria-selected="true"] { background: var(--green); border-color: var(--green); }
+    .panel { display: none; }
+    .panel.active { display: block; }
+    .day-head {
+      margin-bottom: 12px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      padding: 17px;
+      border-radius: var(--radius) 6px var(--radius) 6px;
+    }
+    .day-head h2 { margin: 0 0 8px; font-size: 24px; line-height: 1.35; }
+    .targets { margin: 0; color: var(--green); font-weight: 800; font-size: 15px; }
+    .warmup {
+      margin-top: 13px;
+      padding-top: 12px;
+      border-top: 1px solid var(--line);
+      color: var(--muted);
+      font-size: 15px;
+      font-weight: 700;
+    }
+    .cards { display: grid; gap: 14px; }
+    .exercise {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 7px var(--radius) 7px var(--radius);
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .exercise-body { padding: 16px; }
+    .exercise-title { display: flex; flex-wrap: wrap; align-items: baseline; gap: 8px 10px; }
+    .exercise h3 { margin: 0; font-size: 20px; line-height: 1.45; }
+    .english { direction: ltr; unicode-bidi: isolate; color: var(--green); font-weight: 800; white-space: normal; }
+    .target-badge {
+      display: inline-flex;
+      align-items: baseline;
+      gap: 5px;
+      padding: 5px 9px;
+      border-radius: 7px;
+      background: var(--accent-2);
+      color: var(--ink);
+      font-size: 13px;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+    .target-badge b { color: var(--accent); white-space: nowrap; }
+    .dose {
+      margin: 12px 0;
+      display: flex;
+      flex-wrap: wrap;
+      gap: 7px;
+    }
+    .dose b { background: var(--green-2); color: var(--green); padding: 5px 10px; border-radius: 7px; font-size: 15px; }
+    .tip, .mistake, .alternative { margin: 6px 0 0; font-size: 15px; font-weight: 700; }
+    .tip::before { content: "نصيحة: "; color: var(--green); }
+    .mistake { color: var(--warning); }
+    .alternative { color: var(--muted); }
+    .video-pair {
+      display: grid;
+      grid-template-columns: 1fr;
+      background: var(--surface-2);
+      border-top: 1px solid var(--line);
+      border-bottom: 1px solid var(--line);
+    }
+    .video-card + .video-card { border-top: 1px solid var(--line); }
+    .video-label {
+      display: flex;
+      align-items: baseline;
+      justify-content: space-between;
+      gap: 8px;
+      min-height: 52px;
+      padding: 9px 12px;
+      background: var(--surface-2);
+      color: var(--ink);
+      font-size: 14px;
+      font-weight: 800;
+      line-height: 1.45;
+    }
+    .video-label strong { color: var(--green); white-space: nowrap; }
+    .video-card.alternative-video .video-label strong { color: var(--accent); }
+    .video-copy { display: grid; justify-items: end; gap: 4px; text-align: left; }
+    .video-target {
+      display: inline-block;
+      padding: 3px 7px;
+      border-radius: 6px;
+      background: var(--accent-2);
+      color: var(--warning);
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1.4;
+    }
+    .video {
+      position: relative;
+      aspect-ratio: 16 / 9;
+      background: #0a0a0a;
+    }
+    .video iframe { position: absolute; inset: 0; width: 100%; height: 100%; border: 0; }
+    .track {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) auto;
+      gap: 10px;
+      align-items: center;
+      padding: 12px 16px 14px;
+    }
+    .weight-label { display: flex; align-items: center; gap: 8px; font-size: 14px; font-weight: 800; }
+    .weight-label input {
+      width: 86px;
+      min-height: 44px;
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      background: var(--bg);
+      color: var(--ink);
+      padding: 5px 8px;
+      text-align: center;
+    }
+    .done-btn {
+      min-height: 44px;
+      min-width: 86px;
+      border: 1px solid var(--green);
+      border-radius: 8px;
+      color: var(--green);
+      background: transparent;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .done-btn.done { color: #fff; background: var(--green); }
+    .cardio-head { border-top: 5px solid var(--green); }
+    .cardio-grid { display: grid; gap: 14px; }
+    .cardio-card {
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 7px var(--radius) 7px var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .cardio-card h3 { margin: 0 0 7px; color: var(--green); font-size: 21px; }
+    .cardio-card p { margin: 0; font-weight: 700; }
+    .cardio-card strong { color: var(--ink); }
+    .cardio-card.warning { background: var(--accent-2); border-color: color-mix(in srgb, var(--accent) 45%, var(--line)); }
+    .cardio-card.warning h3 { color: var(--warning); }
+    .cardio-note {
+      margin: 14px 0 0;
+      padding: 15px 16px;
+      background: var(--green-2);
+      border-radius: var(--radius) 7px var(--radius) 7px;
+      color: var(--ink);
+      font-size: 17px;
+      font-weight: 800;
+    }
+    .cooldown {
+      margin-top: 14px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: var(--radius) 7px var(--radius) 7px;
+      padding: 17px;
+    }
+    .cooldown h3 { margin: 0 0 8px; color: var(--green); font-size: 22px; }
+    .cooldown p { margin: 0; font-weight: 700; }
+    .cooldown .hold { margin-top: 8px; color: var(--muted); font-size: 15px; }
+    .rest-day {
+      margin-top: 18px;
+      padding: 17px;
+      background: var(--green-2);
+      border-radius: 7px var(--radius) 7px var(--radius);
+    }
+    .rest-day h2 { margin: 0 0 5px; color: var(--green); font-size: 23px; }
+    .rest-day p { margin: 0; font-weight: 800; }
+    .supplement-note {
+      margin: 14px 0;
+      padding: 15px 16px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-radius: 8px;
+      font-weight: 800;
+    }
+    .food-intro {
+      background: var(--accent-2);
+      border-radius: 8px var(--radius) 8px var(--radius);
+      padding: 16px;
+      margin-bottom: 14px;
+      font-weight: 700;
+    }
+    .food-intro strong { color: var(--accent); font-size: 22px; }
+    .meal { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); margin-bottom: 14px; overflow: hidden; box-shadow: var(--shadow); }
+    .meal h3 { margin: 0; padding: 14px 15px; font-size: 21px; background: var(--surface-2); }
+    .food-table { width: 100%; }
+    .food-row { display: grid; grid-template-columns: minmax(0, 1.6fr) minmax(78px, .7fr) minmax(66px, .55fr); border-top: 1px solid var(--line); }
+    .food-row > div { padding: 10px 8px; font-size: 14px; font-weight: 700; }
+    .food-row > div + div { border-right: 1px solid var(--line); }
+    .food-row.head { background: var(--green-2); color: var(--green); }
+    .food-row.alt { color: var(--muted); }
+    .meal-total { margin: 0; padding: 12px 15px; border-top: 2px solid var(--green); font-weight: 800; color: var(--green); }
+    .food-foot { background: var(--green-2); border-radius: var(--radius) 7px var(--radius) 7px; padding: 16px; font-weight: 800; }
+    .phase-plan {
+      margin-top: 18px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-top: 5px solid var(--accent);
+      border-radius: 8px var(--radius) 8px var(--radius);
+      padding: 18px;
+      box-shadow: var(--shadow);
+    }
+    .phase-plan h2 { margin: 0 0 13px; font-size: 25px; }
+    .phase-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 13px; }
+    .phase-list li { padding-bottom: 13px; border-bottom: 1px solid var(--line); font-weight: 700; }
+    .phase-list li:last-child { padding-bottom: 0; border-bottom: 0; }
+    .phase-list strong { display: block; margin-bottom: 3px; color: var(--green); font-size: 18px; }
+    .phase-rule {
+      margin: 16px 0 0;
+      padding: 14px 15px;
+      background: var(--accent-2);
+      border-radius: 7px 14px 7px 14px;
+      color: var(--ink);
+      font-weight: 800;
+    }
+    .phase-rule strong { color: var(--accent); }
+    .global-sections { margin-top: 24px; display: grid; gap: 14px; }
+    .global-card { background: var(--surface); border: 1px solid var(--line); border-radius: var(--radius); padding: 17px; }
+    .global-card h2 { margin: 0 0 10px; font-size: 24px; }
+    .qa { margin: 0; padding: 0; list-style: none; display: grid; gap: 10px; }
+    .qa li { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+    .qa li:last-child { border: 0; padding-bottom: 0; }
+    .qa strong { display: block; color: var(--green); }
+    .progress-list { margin: 0; padding: 0; list-style: none; display: grid; gap: 11px; }
+    .progress-list li { padding-bottom: 10px; border-bottom: 1px solid var(--line); }
+    .progress-list li:last-child { padding-bottom: 0; border-bottom: 0; }
+    .progress-list strong { display: block; color: var(--green); font-size: 18px; }
+    .timeline strong { color: var(--accent); }
+    .golden { display: grid; grid-template-columns: 1fr 1fr; gap: 8px; }
+    .golden span { background: var(--surface-2); border-radius: 8px; padding: 10px; font-weight: 800; font-size: 14px; }
+    .safety { margin: 16px 0 0; color: var(--muted); font-size: 13px; font-weight: 700; text-align: center; }
+    .today-banner {
+      margin-top: 14px;
+      display: flex;
+      flex-wrap: wrap;
+      align-items: center;
+      gap: 5px 12px;
+      background: var(--accent-2);
+      border: 1px solid color-mix(in srgb, var(--accent) 45%, var(--line));
+      border-radius: 14px 5px 14px 5px;
+      padding: 12px 15px;
+      font-weight: 800;
+    }
+    .today-banner .today-date { color: var(--accent); font-size: 19px; }
+    .today-banner .today-clock { margin-inline-start: auto; color: var(--muted); font-size: 14px; direction: ltr; unicode-bidi: isolate; }
+    .tab.today { border: 3px solid var(--accent); }
+    .tab.stretch-tab { border-color: var(--accent); }
+    .tab.physio-tab { border-color: var(--accent); }
+    .tab.physio-tab[aria-selected="true"] { background: var(--accent); border-color: var(--accent); }
+    .today-pill {
+      display: inline-block;
+      background: var(--accent);
+      color: #fff;
+      font-size: 11px;
+      font-weight: 800;
+      line-height: 1.5;
+      padding: 2px 9px;
+      border-radius: 999px;
+      vertical-align: middle;
+    }
+    .tab .today-pill { margin-bottom: 5px; }
+    .day-head .today-pill, .rest-day .today-pill { margin-inline-start: 8px; }
+    .day-head.today-head { border-top: 6px solid var(--accent); }
+    .rest-day.today-rest { border: 3px solid var(--accent); }
+    .stretch-link {
+      margin-top: 10px;
+      display: inline-block;
+      border: 1px solid var(--green);
+      background: transparent;
+      color: var(--green);
+      border-radius: 8px;
+      padding: 7px 13px;
+      font-size: 14px;
+      font-weight: 800;
+      cursor: pointer;
+    }
+    .cooldown .stretch-link { border-color: var(--accent); color: var(--accent); }
+    .stretch-group-head {
+      margin: 18px 0 12px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-top: 5px solid var(--green);
+      border-radius: var(--radius) 6px var(--radius) 6px;
+      padding: 15px 17px;
+    }
+    .stretch-group-head.post { border-top-color: var(--accent); }
+    .stretch-group-head h3 { margin: 0 0 5px; font-size: 21px; }
+    .stretch-group-head p { margin: 0; color: var(--muted); font-weight: 700; font-size: 15px; }
+    .video-single { background: var(--surface-2); border-top: 1px solid var(--line); }
+    .taichi {
+      margin-top: 24px;
+      background: var(--surface);
+      border: 1px solid var(--line);
+      border-top: 6px solid var(--green);
+      border-radius: var(--radius) 6px var(--radius) 6px;
+      overflow: hidden;
+      box-shadow: var(--shadow);
+    }
+    .taichi-body { padding: 18px; }
+    .taichi h2 { margin: 0 0 8px; font-size: 25px; line-height: 1.35; }
+    .taichi h2 .english { font-size: 20px; }
+    .taichi p { margin: 0 0 10px; font-weight: 700; }
+    .taichi .taichi-meta { color: var(--muted); font-size: 15px; }
+    .taichi .taichi-meta strong { color: var(--green); }
+    .taichi .dose { margin: 12px 0 4px; }
+    .taichi .video { border-top: 1px solid var(--line); }
+    .taichi-link {
+      display: inline-block;
+      margin-top: 12px;
+      color: var(--green);
+      font-weight: 800;
+      font-size: 15px;
+    }
+    @media (min-width: 700px) {
+      .page { padding-inline: 24px; }
+      .start { grid-template-columns: 1fr 1fr; }
+      .tabs-wrap { position: sticky; top: 0; margin-inline: -24px; padding-inline: 24px; }
+      .tabs { grid-template-columns: repeat(4, minmax(0, 1fr)); }
+      .tab { text-align: center; min-height: 82px; }
+      .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); align-items: start; }
+      .video-pair { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .video-card + .video-card { border-top: 0; border-right: 1px solid var(--line); }
+      .cardio-grid { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+      .global-sections { grid-template-columns: 1.25fr .75fr; }
+    }
+    @media (prefers-reduced-motion: reduce) { html { scroll-behavior: auto; } }
+  
+    .video-link {
+      position: absolute; inset: 0; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 8px;
+      background: linear-gradient(135deg, #14231a, #0a0a0a); color: #fff; text-decoration: none; text-align: center; padding: 10px;
+      font-weight: 800; font-size: 15px; line-height: 1.4;
+    }
+    .video-link .play {
+      width: 58px; height: 58px; border-radius: 50%; background: #ff0033; display: flex; align-items: center; justify-content: center;
+      font-size: 24px; padding-inline-start: 4px; box-shadow: 0 6px 18px rgba(0,0,0,.4);
+    }
+    .video-link small { font-weight: 600; color: #cfe0d4; font-size: 12px; }
+
+    .video-link { overflow: hidden; }
+    .video-link img { position: absolute; inset: 0; width: 100%; height: 100%; object-fit: cover; }
+    .video-link .shade { position: absolute; inset: 0; background: rgba(0,0,0,.28); }
+    .video-link .play, .video-link small { position: relative; z-index: 1; }
+    .video-link small { color: #fff; text-shadow: 0 1px 4px rgba(0,0,0,.8); }
+</style>
+</head>
+<body>
+  <main class="page">
+    <section class="hero" aria-labelledby="main-title">
+      <h1 id="main-title">جدول التمرين — 6 أيام</h1>
+      <p>دفع / سحب / رجل مرتين أسبوعياً • اليوم 7 — الأحد Sunday — راحة <span dir="ltr">Rest</span></p>
+      <div class="today-banner" id="today-banner" role="status" aria-label="تاريخ اليوم وتمرين اليوم"></div>
+      <div class="start" aria-label="ابدأ من هنا">
+        <div class="coach-note">
+          <strong>ابدأ من هنا: اختار الوزن الصح</strong>
+          <p>اختر وزناً تكمل به التكرارات المطلوبة وآخر عدتين فيه صعبتين مع أداء سليم. لو خلصت كل المجموعات بسهولة → زوّد الوزن الجلسة القادمة. لو فشلت قبل إكمال التكرارات → قلّل الوزن.</p>
+        </div>
+        <div class="coach-note progress">
+          <strong>نظام التقدم</strong>
+          <p>لو نفذت كل التكرارات المطلوبة في كل المجموعات بأداء سليم لجلستين متتاليتين → زوّد أصغر وزن متاح (2.5 كجم) في الجلسة التالية.</p>
+        </div>
+      </div>
+      <p class="schedule-line">كل جلسة: إحماء اليوم أولاً، ثم التمارين بالترتيب. التزم بوقت الراحة المكتوب ولا تضحّي بالأداء لرفع وزن أكبر.</p>
+    </section>
+
+    <nav class="tabs-wrap" aria-label="اختيار اليوم أو جدول الأكل">
+      <div class="tabs" role="tablist" id="tabs"></div>
+    </nav>
+
+    <section id="panels" aria-live="polite"></section>
+
+    <section class="rest-day" id="rest-day" aria-labelledby="rest-title">
+      <h2 id="rest-title">اليوم 7 — الأحد Sunday — راحة <span dir="ltr">Rest Day</span></h2>
+      <p>راحة تامة من الحديد — مشي خفيف 20–30 دقيقة ونوم كافٍ كفاية. العضلات تُبنى في الراحة.</p>
+    </section>
+
+    <section class="global-sections">
+      <article class="global-card">
+        <h2>المدرب يجيب</h2>
+        <ul class="qa">
+          <li><strong>فاتني يوم تمرين؟</strong>كمّل بالترتيب ولا تحاول التعويض أو جمع يومين في جلسة واحدة.</li>
+          <li><strong>حسيت بوجع في مفصل؟</strong>خفف الوزن أو بدّل التمرين، ولو استمر الألم توقف واستشر مختصاً.</li>
+          <li><strong>إمتى أغيّر البرنامج؟</strong>كل 8–12 أسبوع أو عند ثبات الأوزان 3 أسابيع.</li>
+          <li><strong>أسبوع الراحة الخفيفة؟</strong>كل 6–8 أسابيع، نفّذ نفس التمارين بنصف المجموعات والأوزان لمدة أسبوع.</li>
+        </ul>
+      </article>
+      <article class="global-card">
+        <h2>قواعد ذهبية</h2>
+        <div class="golden">
+          <span>نم 7–8 ساعات</span>
+          <span>بروتين كافٍ يومياً</span>
+          <span>3 لتر ماء</span>
+          <span>الاستمرارية أهم من الكمال</span>
+          <span>لا تتمرن وأنت مصاب</span>
+          <span>الأداء السليم أولاً</span>
+        </div>
+      </article>
+      <article class="global-card">
+        <h2>تابع تقدمك</h2>
+        <ul class="progress-list">
+          <li><strong>الميزان</strong>3 مرات أسبوعياً صباحاً على الريق، وسجّل المتوسط الأسبوعي.</li>
+          <li><strong>محيط الخصر</strong>قِس كل أسبوعين عند السرة — نزوله أهم من الميزان لهدف إظهار البطن.</li>
+          <li><strong>صور التقدم</strong>صورة أمامية وجانبية كل 4 أسابيع بنفس الإضاءة.</li>
+          <li><strong>دفتر الأوزان</strong>خانات الوزن في الصفحة هي سجل جلستك — دوّن نتيجتها قبل إغلاق الصفحة. لو الوزن ثابت 3 أسابيع راجع أكلك ونومك.</li>
+        </ul>
+      </article>
+      <article class="global-card timeline">
+        <h2>إمتى هشوف نتيجة؟</h2>
+        <ul class="progress-list">
+          <li><strong>خلال 2–4 أسابيع</strong>تحسّن في القوة والطاقة.</li>
+          <li><strong>خلال 8–12 أسبوع</strong>تغيّر أوضح في شكل العضلات مع الالتزام بالأكل والتمرين.</li>
+          <li><strong>عضلات البطن</strong>تظهر بنزول دهون البطن ومحيط الخصر، وليس بعدد تمارين البطن — الاستمرارية هي السر.</li>
+        </ul>
+      </article>
+    </section>
+    <p class="safety">توقّف عند ألم حاد أو دوخة. هذا جدول عام؛ الإصابات أو الحالات الصحية تحتاج مراجعة طبيب أو أخصائي مؤهل.</p>
+  </main>
+
+  <script>
+    var days = [
+      {
+        tab: "اليوم 1 — الاثنين Monday — دفع Push", title: "اليوم 1 — الاثنين Monday — دفع Push", targets: "الصدر Chest • الكتف Shoulders • التراي Triceps • البطن Abs",
+        warmup: "5 دقائق مشي أو عجلة + تدوير الكتف للأمام والخلف 15 مرة + ضغط حيطة 15 مرة.",
+        exercises: [
+          ["ضغط دمبل مائل لأعلى","Incline DB Press","4×8–12","90–120 ث","بنش 30 درجة وادفع للأعلى وللداخل قليلاً.","لا تقوّس أسفل الظهر ولا ترفع كتفيك.","ضغط صدر مائل على الجهاز","oZVCBM9f8Eo"],
+          ["جهاز ضغط الصدر","Machine Chest Press","3×8–12","90 ث","صدر مفتوح وكتف للخلف.","لا تدفع كتفيك للأمام في نهاية الحركة.","ضغط دمبل مستوي","CIykDiF4sfg"],
+          ["فلاي كابل من أسفل لأعلى","Cable Fly Low-to-High","3×12–15","60–90 ث","اعصر الصدر أعلى الحركة ثانية.","لا تثنِ الكوع وتحوّلها إلى ضغط.","فلاي دمبل مائل خفيف","KFl3Re5UbPo"],
+          ["رفرفة جانبية","Lateral Raise","3×12–15","60 ث","ارفع لمستوى الكتف فقط.","لا تهز جسمك لرفع الوزن.","رفرفة جانبية بالكابل","4p_m96HXMLk"],
+          ["تراي كابل فوق الرأس","Overhead Cable Extension","3×10–12","60–90 ث","الكوع ثابت بجانب الرأس.","لا تفتح الكوعين للخارج ولا تقوّس ظهرك.","تراي دمبل فوق الرأس","jioCqlKKrJc"],
+          ["كرانش كابل","Cable Crunch","3×12–15","60 ث","قرّب صدرك لحوضك — قاعدة التقدم: كل ما توصل 15 عدة نظيفة زوّد الوزن في الجلسة الجاية.","لا تسحب بالحوض أو الذراعين فقط.","كرانش أرضي ببطء","ToJeyhydUxU"],
+          ["رفع الرجل مفرودة معلق","Hanging Leg Raise","3×10–12","60 ث","لف حوضك لفوق في نهاية الرفعة — دي اللي بتشغّل البطن السفلية بجد. التطور تدريجياً: ابدأ برفع الركب، وكل ما تقوى انتقل للرجل المفرودة.","لا تتأرجح ولا تستخدم الزخم، وانزل ببطء.","رفع الركب معلق","2oxruLoiGhI"]
+        ]
+      },
+      {
+        tab: "اليوم 2 — الثلاثاء Tuesday — سحب Pull", title: "اليوم 2 — الثلاثاء Tuesday — سحب Pull", targets: "الظهر Back • الباي Biceps • البطن Abs",
+        warmup: "5 دقائق مشي أو عجلة + تعليق خفيف على البار 20 ثانية + تدوير الذراعين 15 مرة.",
+        exercises: [
+          ["سحب أمامي واسع","Lat Pulldown","4×8–12","90–120 ث","اسحب لأسفل الصدر وصدرك مرفوع.","لا تسحب خلف الرقبة ولا ترجع بجسمك للخلف.","سحب أمامي قبضة محايدة","7JnP8dFbS14"],
+          ["تجديف دمبل مسنود","Chest-Supported DB Row","3×8–12","90 ث","اسحب الكوع للخلف.","لا ترفع صدرك عن البنش ولا تشد رقبتك.","تجديف على جهاز مسنود","kNvy2_9Ji2w"],
+          ["سحب كابل بذراع مفرودة","Straight-Arm Pulldown","3×12–15","60–90 ث","الحركة من الكتف.","لا تثنِ الكوعين ولا تتأرجح.","Dumbbell Pullover خفيف","wcVDItawocI"],
+          ["سحب للوجه","Face Pull","3×12–15","60–90 ث","اسحب لمستوى الأنف.","لا تخفض الكوعين ولا ترفع الكتفين.","رفرفة خلفية بالدمبل","0Po47vvj9g4"],
+          ["باي دمبل","DB Curl","3×10–12","60–90 ث","لا تتأرجح.","لا تقدّم الكوع للأمام أثناء الرفع.","باي كابل مستقيم","P1FqV-oFn5M"],
+          ["باي دمبل مائل","Incline DB Curl","2×10–12","60–90 ث","بنش 45–60 درجة وسيب دراعك يتدلى خلف جسمك لاستطالة كاملة، واعصر فوق ثانية عشان ذروة الباي.","لا تقدّم كوعك للأمام ولا ترفع راسك عن البنش.","باي بريتشر دمبل بذراع واحدة","soxrZlIl35U"],
+          ["باي هامر","Hammer Curl","2×10–12","60 ث","قبضة محايدة.","لا تحرّك الكوع بعيداً عن جانبك.","هامر بالكابل والحبل","CFBZ4jN1CMI"],
+          ["رفع الركب معلق","Hanging Knee Raise","3×10–15","60 ث","ارفع ركبك لصدرك دون تأرجح.","لا تستخدم الزخم ولا تقوّس أسفل الظهر.","رفع الرجل مفرودة معلق","dPwg1E_ygjc"]
+        ]
+      },
+      {
+        tab: "اليوم 3 — الأربعاء Wednesday — رجل Legs", title: "اليوم 3 — الأربعاء Wednesday — رجل Legs", targets: "الفخذ الأمامي Quads • الخلفي Hamstrings • السمانة Calves • البطن Abs",
+        warmup: "5 دقائق مشي أو عجلة + سكوات بدون وزن 15 مرة + مشي مع رفع الركب دقيقة.",
+        exercises: [
+          ["دفع رجل","Leg Press","4×8–12","90–120 ث","لا تفرد الركبة تماماً.","لا ترفع أسفل ظهرك عن المقعد.","Goblet Squat بالدمبل","W1SD96lrudY"],
+          ["سكوات بلغاري","Bulgarian Split Squat","3×10–12 لكل رجل","90 ث","جذع مستقيم.","لا تدع الركبة تنهار للداخل.","Reverse Lunge بالدمبل","TEXl2b3__S4"],
+          ["مد الرجل","Leg Extension","3×12–15","60–90 ث","اعصر أعلى الحركة.","لا تركل الوزن بسرعة ولا تقفل الركبة بعنف.","Spanish Squat برباط","YyvSfVjQeL0"],
+          ["ثني الرجل جالس","Seated Leg Curl","3×10–12","60–90 ث","تحكم كامل.","لا ترفع الحوض عن المقعد.","ثني الرجل نائم","jq03iefZxjc"],
+          ["سمانة واقف","Standing Calf Raise","4×12–15","60 ث","مدى حركي كامل.","لا تنط بالحركة ولا تختصر النزول.","سمانة على Leg Press","MAMzF7iZNkc"],
+          ["دحرجة عجلة البطن","Ab Wheel Rollout","3×8–12","60–90 ث","من على الركب، شد بطنك ومؤخرتك ولف ظهرك لفوق شوية، وانزل ببطء وتحكم كامل وارجع ببطنك.","لا تقوّس أسفل ظهرك آخر المدى ولا ترجع بمؤخرتك ناحية كعبك.","تمرين الحشرة الميتة","A3uK5TPzHq8"]
+        ]
+      },
+      {
+        tab: "اليوم 4 — الخميس Thursday — دفع Push", title: "اليوم 4 — الخميس Thursday — دفع Push", targets: "الكتف Shoulders • الصدر Chest • التراي Triceps • البطن Abs",
+        warmup: "5 دقائق مشي أو عجلة + تدوير الكتف للأمام والخلف 15 مرة + ضغط حيطة 15 مرة.",
+        exercises: [
+          ["ضغط كتف دمبل جالس","Seated DB Shoulder Press","4×8–12","90–120 ث","ظهر مسنود.","لا تقوّس الظهر ولا تنزل الكوع أبعد من راحتك.","ضغط كتف على الجهاز","SSXS4Z8OkCg"],
+          ["ضغط دمبل مستوي","Flat DB Press","3×8–12","90 ث","انزل لمستوى الصدر.","لا تخبط الدمبلين ولا تفتح الكوع 90 درجة.","جهاز ضغط الصدر","AduT4Eq-iP0"],
+          ["جهاز الفراشة","Pec Deck","3×12–15","60–90 ث","اعصر في المنتصف.","لا تترك الوزن يرجع بسرعة.","Cable Fly واقف","K2VJ4HeXb4s"],
+          ["فلاي كابل مائل","Incline Cable Fly","2×12–15","60–90 ث","بنش 30 درجة بين الكابلات من تحت، واعصر أعلى الحركة ثانيتين عشان تفصيلة أعلى الصدر.","لا تثنِ الكوع وتحوّلها لضغط ولا تنزل دراعك أبعد من راحة كتفك.","فلاي دمبل مائل","GtHNC-5GtR0"],
+          ["رفرفة كابل","Cable Lateral Raise","3×12–15 لكل ذراع","60 ث","حركة بطيئة.","لا تلف الجذع ولا ترفع فوق مستوى الكتف.","رفرفة جانبية بالدمبل","fqGUjzxa6lI"],
+          ["تراي حبل","Rope Pushdown","3×10–12","60–90 ث","افرد الذراع تماماً.","لا تحرك الكوعين للأمام والخلف.","تراي بار مستقيم","y6EdXBdL75A"],
+          ["ضغط بالوف","Pallof Press","3×10–12 لكل جهة","60 ث","قاوم الدوران.","لا تلف الحوض ناحية الكابل.","ضغط بالوف برباط مقاومة","HXrLaqNIkTs"]
+        ]
+      },
+      {
+        tab: "اليوم 5 — الجمعة Friday — سحب Pull", title: "اليوم 5 — الجمعة Friday — سحب Pull", targets: "الظهر Back • الباي Biceps • التراي Triceps • البطن Abs",
+        warmup: "5 دقائق مشي أو عجلة + تعليق خفيف على البار 20 ثانية + تدوير الذراعين 15 مرة.",
+        exercises: [
+          ["سحب أرضي قبضة ضيقة","Seated Cable Row","4×8–12","90–120 ث","اسحب الكوعين للخلف.","لا تتأرجح بالجذع ولا تدوّر الكتفين للأمام.","تجديف جهاز قبضة ضيقة","lJoozxC0Rns"],
+          ["سحب أمامي قبضة محايدة","Close-Grip Pulldown","3×8–12","90 ث","ركّز على منتصف الظهر.","لا تشد بالذراعين فقط ولا ترجّح الجسم.","Assisted Pull-up قبضة محايدة","UqKNBOzHOcM"],
+          ["رفرفة خلفية","Rear Delt Fly","3×12–15","60–90 ث","انحنِ للأمام.","لا تحوّل الحركة إلى تجديف ولا تهز الجسم.","Reverse Pec Deck","zA-vK74AgEc"],
+          ["باي بار متعرج","EZ-Bar Curl","3×8–12","60–90 ث","مدى كامل دون تأرجح.","لا ترجّع الظهر ولا ترفع الكوعين.","باي دمبل بالتبادل","49xiNdJ0txQ"],
+          ["تراي دمبل فوق الرأس","Overhead DB Extension","3×10–12","60–90 ث","الكوعان بجانب الرأس.","لا تفتح الكوعين ولا تقوّس أسفل الظهر.","تراي كابل فوق الرأس","nRee_0vOxwk"],
+          ["تقطيع خشب","Cable Woodchopper","3×12 لكل جهة","60 ث","الحركة من الجذع.","لا تسحب بالذراعين وحدهما ولا تلف الركبة.","Woodchopper برباط مقاومة","he4IhLc1d5k"],
+          ["سحب جالس بذراع واحدة","Single-Arm Seated Row","2×10–12 لكل جهة","60–90 ث","اسحب الكوع لجيبك واعصر ظهرك ثانية، وابدأ دايماً بالجهة الأضعف عشان التناسق.","لا تلف جذعك مع السحبة ولا ترفع كتفك ناحية ودنك.","تجديف دمبل بذراع واحدة","CrylzZHfO1c"]
+        ]
+      },
+      {
+        tab: "اليوم 6 — السبت Saturday — رجل Legs", title: "اليوم 6 — السبت Saturday — رجل Legs", targets: "الخلفي Hamstrings • الأرداف Glutes • السمانة Calves • البطن Abs",
+        warmup: "5 دقائق مشي أو عجلة + سكوات بدون وزن 15 مرة + مشي مع رفع الركب دقيقة.",
+        exercises: [
+          ["ديدليفت روماني دمبل","DB Romanian Deadlift","4×8–12","90–120 ث","ظهر مستقيم والحركة من الحوض.","لا تدوّر الظهر ولا تحوّلها إلى سكوات.","Cable Pull-Through","aa57T45iFSE"],
+          ["ثني الرجل نائم","Lying Leg Curl","3×10–12","60–90 ث","اعصر أعلى الحركة.","لا ترفع الحوض ولا تضرب الوزن.","ثني الرجل جالس","vl5nUdE9mWM"],
+          ["دفع الحوض","Hip Thrust","3×10–12","90 ث","اعصر الأرداف ثانيتين.","لا تبالغ في تقويس أسفل الظهر أعلى الحركة.","Glute Bridge أرضي","pF17m_CXfL0"],
+          ["مد الرجل برجل واحدة","Single-Leg Extension","2×12–15 لكل رجل","60 ث","رجل واحدة في كل مرة واعصر أعلى الحركة ثانية — لتقسيم الفخذ الأمامي وموازنة قوة الرجلين.","لا تركل الوزن بسرعة ولا تقفل الركبة بعنف.","مد الرجل بالرجلين معاً","82IuSLk5zNc"],
+          ["سمانة جالس","Seated Calf Raise","4×12–15","60 ث","تحكم ومدى كامل.","لا تنط ولا تتوقف في نصف الحركة.","سمانة واقف","3ZRe_QpvRPg"],
+          ["كرانش كابل","Cable Crunch","3×12–15","60 ث","قرّب صدرك لحوضك — قاعدة التقدم: كل ما توصل 15 عدة نظيفة زوّد الوزن في الجلسة الجاية.","لا تسحب بالحوض أو الذراعين فقط.","كرانش أرضي ببطء","ToJeyhydUxU"],
+          ["رفع الركب معلق","Hanging Knee Raise","2×10–15","60 ث","ارفع ركبك دون تأرجح.","لا تستخدم الزخم ولا تقوّس أسفل الظهر.","رفع الرجل مفرودة معلق","dPwg1E_ygjc"]
+        ]
+      }
+    ];
+
+    var alternativeVideoIds = [
+      ["VesHgJR14E8","3qc7MGXKiU0","ZEz0d4tW2W4","QSijedjfl04","nRee_0vOxwk","tnZNcIqhGb0","dPwg1E_ygjc"],
+      ["5YqcF-GYtZM","kBiaTHyKH0Y","Vcj5GT-gPq0","U3MFN3PkBfw","5lCh1gfLNAE","DoCWeUBA0Gs","dLRVpRC4L3Y","2oxruLoiGhI"],
+      ["Xjo_fY9Hl9w","zZaXHwFf9r8","3igyh6eqGvc","S367qaHeYWU","sluiSitVePs","rbemelnkHag"],
+      ["GcY6TZxfS0k","vI-1tOXyxq4","pvOEQHcwkZQ","ajdFwa-qM98","rODm5yp65ns","2-LAMcpzODU","MpNe1ZN2-9E"],
+      ["GVvPAXcyhjs","LXe8DGXsdfE","6cHY60y7QRU","U9WVoON-jmU","jioCqlKKrJc","hXwBHRANfXU","gfUg6qWohTk"],
+      ["VRDxdi2d-2c","jq03iefZxjc","tqp5XQPpTxY","YyvSfVjQeL0","T2Vg3QNQ418","tnZNcIqhGb0","2oxruLoiGhI"]
+    ];
+
+    var exerciseTargets = [
+      [
+        "الصدر العلوي / Upper Chest",
+        "الصدر الأوسط / Mid Chest",
+        "الصدر العلوي والداخلي / Upper & Inner Chest",
+        "الكتف الجانبي / Side Delts",
+        "الترايسبس — الرأس الطويلة / Triceps Long Head",
+        "البطن العلوية / Upper Abs",
+        "البطن السفلية / Lower Abs"
+      ],
+      [
+        "المجنص — عضلات الظهر العريضة / Lats",
+        "الظهر الأوسط والعلوي / Mid & Upper Back",
+        "المجنص / Lats",
+        "الكتف الخلفي والظهر العلوي / Rear Delts & Upper Back",
+        "البايسبس / Biceps",
+        "البايسبس — الرأس الطويلة وذروة الباي / Biceps Long Head & Peak",
+        "العضلة العضدية والساعد / Brachialis & Forearms",
+        "البطن السفلية / Lower Abs"
+      ],
+      [
+        "أمامية الفخذ والمؤخرة / Quads & Glutes",
+        "أمامية الفخذ والمؤخرة / Quads & Glutes",
+        "أمامية الفخذ / Quads",
+        "خلفية الفخذ / Hamstrings",
+        "السمانة / Calves",
+        "البطن والجذع / Abs & Core"
+      ],
+      [
+        "الكتف الأمامي والجانبي / Front & Side Delts",
+        "الصدر الأوسط / Mid Chest",
+        "الصدر الداخلي / Inner Chest",
+        "الصدر العلوي / Upper Chest",
+        "الكتف الجانبي / Side Delts",
+        "الترايسبس / Triceps",
+        "البطن الجانبية وثبات الجذع / Obliques & Core Stability"
+      ],
+      [
+        "الظهر الأوسط والمجنص / Mid Back & Lats",
+        "المجنص السفلي / Lower Lats",
+        "الكتف الخلفي / Rear Delts",
+        "البايسبس / Biceps",
+        "الترايسبس — الرأس الطويلة / Triceps Long Head",
+        "البطن الجانبية / Obliques",
+        "الظهر الأوسط والمجنص — تناسق الجهتين / Mid Back & Lats (Unilateral)"
+      ],
+      [
+        "خلفية الفخذ والمؤخرة / Hamstrings & Glutes",
+        "خلفية الفخذ / Hamstrings",
+        "المؤخرة / Glutes",
+        "أمامية الفخذ / Quads",
+        "السمانة — العضلة النعلية / Soleus",
+        "البطن العلوية / Upper Abs",
+        "البطن السفلية / Lower Abs"
+      ]
+    ];
+
+    var alternativeTargets = [
+      [
+        "الصدر العلوي / Upper Chest",
+        "الصدر الأوسط / Mid Chest",
+        "الصدر العلوي / Upper Chest",
+        "الكتف الجانبي / Side Delts",
+        "الترايسبس — الرأس الطويلة / Triceps Long Head",
+        "البطن العلوية / Upper Abs",
+        "البطن السفلية / Lower Abs"
+      ],
+      [
+        "المجنص / Lats",
+        "الظهر الأوسط والعلوي / Mid & Upper Back",
+        "المجنص / Lats",
+        "الكتف الخلفي / Rear Delts",
+        "البايسبس / Biceps",
+        "البايسبس / Biceps",
+        "العضلة العضدية والساعد / Brachialis & Forearms",
+        "البطن السفلية / Lower Abs"
+      ],
+      [
+        "أمامية الفخذ والمؤخرة / Quads & Glutes",
+        "أمامية الفخذ والمؤخرة / Quads & Glutes",
+        "أمامية الفخذ / Quads",
+        "خلفية الفخذ / Hamstrings",
+        "السمانة / Calves",
+        "البطن والجذع / Abs & Core"
+      ],
+      [
+        "الكتف الأمامي والجانبي / Front & Side Delts",
+        "الصدر الأوسط / Mid Chest",
+        "الصدر الأوسط والداخلي / Mid & Inner Chest",
+        "الصدر العلوي / Upper Chest",
+        "الكتف الجانبي / Side Delts",
+        "الترايسبس / Triceps",
+        "البطن الجانبية وثبات الجذع / Obliques & Core Stability"
+      ],
+      [
+        "الظهر الأوسط والمجنص / Mid Back & Lats",
+        "المجنص / Lats",
+        "الكتف الخلفي / Rear Delts",
+        "البايسبس / Biceps",
+        "الترايسبس — الرأس الطويلة / Triceps Long Head",
+        "البطن الجانبية / Obliques",
+        "المجنص والظهر الأوسط / Lats & Mid Back"
+      ],
+      [
+        "المؤخرة وخلفية الفخذ / Glutes & Hamstrings",
+        "خلفية الفخذ / Hamstrings",
+        "المؤخرة / Glutes",
+        "أمامية الفخذ / Quads",
+        "السمانة — عضلة بطن الساق / Gastrocnemius",
+        "البطن العلوية / Upper Abs",
+        "البطن السفلية / Lower Abs"
+      ]
+    ];
+
+    var cooldowns = [
+      'إطالة الصدر على الحائط 30 ثانية لكل جهة + إطالة الكتف عبر الصدر + إطالة التراي فوق الرأس.',
+      'إطالة الظهر في وضعية الطفل + إطالة العضلة الجانبية ممسكاً بإطار ثابت + إطالة الكتف الخلفي.',
+      'إطالة الفخذ الأمامية واقفاً + إطالة الفخذ الخلفية + إطالة السمانة على الحائط + وضعية الطفل.',
+      'إطالة الصدر على الحائط 30 ثانية لكل جهة + إطالة الكتف عبر الصدر + إطالة التراي فوق الرأس.',
+      'إطالة الظهر في وضعية الطفل + إطالة العضلة الجانبية ممسكاً بإطار ثابت + إطالة الباي والكتف برفق.',
+      'إطالة الفخذ الأمامية والخلفية + إطالة الأرداف جالساً + إطالة السمانة + وضعية الطفل.'
+    ];
+
+    var cardioHtml = '' +
+      '<section class="panel" id="panel-cardio" role="tabpanel" aria-labelledby="tab-cardio">' +
+        '<header class="day-head cardio-head"><h2>الكارديو</h2><p class="targets">خطة بسيطة تحافظ على المفاصل وتساعدك في عجز السعرات</p></header>' +
+        '<div class="cardio-grid">' +
+          '<article class="cardio-card"><h3>بعد التمرين — 3 مرات أسبوعياً</h3><p><strong>20–30 دقيقة</strong> مشي مائل <span dir="ltr">Incline Walk</span> أو دراجة ثابتة، بعد تمارين الحديد مباشرة. حافظ على شدة متوسطة تقدر تتكلم أثناءها بارتياح.</p></article>' +
+          '<article class="cardio-card"><h3>يومياً</h3><p><strong>مشي 30–45 دقيقة</strong> أو <strong>8000–10000 خطوة</strong> في اليوم. مشي عادي في أي وقت يناسبك.</p></article>' +
+          '<article class="cardio-card warning"><h3>ممنوع</h3><p>الجري عالي الشدة <span dir="ltr">HIIT</span> بشكل يومي — إجهاد كبير على المفاصل في هذا السن، وخطر الإصابة أعلى من فائدته.</p></article>' +
+        '</div>' +
+        '<p class="cardio-note">الكارديو يسرّع عجز السعرات، لكن الأكل هو الأساس — لا تعوّض الأكل الزائد بكارديو إضافي.</p>' +
+      '</section>';
+
+    var foodHtml = '' +
+      '<section class="panel" id="panel-food" role="tabpanel" aria-labelledby="tab-food">' +
+        '<div class="food-intro"><strong>جدول الأكل — هدف 1750 سعرة</strong><br>بناءً على وزن 64 كجم وتدريب 6 أيام: عجز تقريبي 400–500 سعرة عن احتياج يقارب 2200، مع بروتين مرتفع للمساعدة في الحفاظ على العضلات.</div>' +
+        meal('الفطار', [
+          ['قبل التمرين: زبادي يوناني','200 جم','120'],['قبل التمرين: موزة','1','105'],
+          ['بعد التمرين: Whey','سكوب','120'],['بعد التمرين: بيض','2','140'],['بعد التمرين: شوفان','40 جم','150'],
+          ['بديل البيض: بياض بيض + بيضة كاملة','150 جم + 1','80 + 70','alt']
+        ], 'قبل التمرين 225 • بعد التمرين 410 • الإجمالي 635 سعرة') +
+        meal('الغداء', [
+          ['فراخ','180 جم','300'],['بديل: لحم قليل الدهن','150 جم','300','alt'],['بديل: سمك مشوي','200 جم','260','alt'],
+          ['رز مطبوخ','180 جم','235'],['بديل: بطاطس Air Fryer','300 جم','230','alt'],['خضار / سلطة','300 جم','90'],
+          ['عنب','150 جم','100'],['بديل: تفاحة','1','95','alt'],['زيت زيتون','ملعقة شاي','40']
+        ], 'مثال فراخ + رز + سلطة + عنب + زيت = 765 سعرة') +
+        meal('العشاء', [
+          ['زبادي يوناني','200 جم','120'],['مكسرات (لوز / عين جمل)','15 جم','90'],
+          ['بديل: Cottage Cheese','150 جم','130','alt'],['بديل: Protein Bar','1','180–220','alt'],['بديل: فراخ + خضار','100 جم','165 + الخضار','alt']
+        ], 'الاختيار الأساسي = 210 سعرة') +
+        meal('سناك', [['لبن','250 مل','150']], 'الإجمالي = 150 سعرة') +
+        '<p class="supplement-note">مكملات اختيارية: الواي بروتين الذي تستخدمه كافٍ. الكرياتين (5 جم يومياً) مدعوم بأبحاث قوية لكبار السن — استشر طبيبك قبل إضافته.</p>' +
+        '<div class="food-foot">الإجمالي اليومي ≈ 1750 سعرة وبروتين ≈ 145 جم — عجز ≈ 400-500 سعرة لنزول حوالي نصف كيلو دهون أسبوعياً مع الحفاظ على العضلات. اشرب 3 لتر ماء يومياً. اوزن نفسك 3 مرات أسبوعياً على الريق — لو النزول أقل من 0.3 كيلو أسبوعياً لمدة 3 أسابيع، قلّل 100 سعرة إضافية من الرز أو الشوفان.</div>' +
+        '<section class="phase-plan" aria-labelledby="phase-plan-title">' +
+          '<h2 id="phase-plan-title">خطة المراحل</h2>' +
+          '<ol class="phase-list">' +
+            '<li><strong>1) مرحلة التنشيف — المرحلة الحالية</strong>1750 سعرة في اليوم + 145 جرام بروتين + التمرين 6 أيام، لمدة 8–12 أسبوع تقريباً. لو احتجت مدة أطول: خُد أسبوع أو اتنين على سعرات الصيانة (حوالي 2150 سعرة) كل 6–8 أسابيع، وبعدها ارجع للعجز.</li>' +
+            '<li><strong>2) علامات انتهاء العجز</strong>الميزان واقف أسبوعين متتاليين، أو القوة بدأت تنزل في التمرين، أو وصلت للشكل اللي عايزه في المراية.</li>' +
+            '<li><strong>3) مرحلة التثبيت</strong>2–3 أسابيع على سعرات الصيانة (حوالي 2100–2200 سعرة) بشكل تدريجي. دي اللي بتثبت الشكل الجديد وتمنع الرجوع السريع.</li>' +
+            '<li><strong>4) مرحلة الاختيار</strong>إما تفضل على سعرات الصيانة علشان تحافظ على الشكل المتناسق، أو تعمل زيادة نظيفة: زوّد 200–300 سعرة بس فوق الصيانة علشان تبني عضلات أكبر من غير دهون زيادة.</li>' +
+          '</ol>' +
+          '<p class="phase-rule"><strong>القاعدة العامة:</strong> العجز يكشف العضلات، والبروتين والتمرين يبنوها — طول ما القوة ثابتة أو بتزيد أثناء النزول، الخطة ماشية صح.</p>' +
+        '</section>' +
+      '</section>';
+
+    function meal(title, rows, total) {
+      var body = rows.map(function(r) {
+        return '<div class="food-row ' + (r[3] || '') + '" role="row"><div role="cell">' + r[0] + '</div><div role="cell">' + r[1] + '</div><div role="cell">' + r[2] + '</div></div>';
+      }).join('');
+      return '<article class="meal"><h3>' + title + '</h3><div class="food-table" role="table"><div class="food-row head" role="row"><div role="columnheader">الصنف</div><div role="columnheader">الكمية</div><div role="columnheader">السعرات</div></div>' + body + '</div><p class="meal-total">' + total + '</p></article>';
+    }
+
+    function exerciseCard(ex, dayIndex, exerciseIndex) {
+      var id = 'd' + dayIndex + 'e' + exerciseIndex;
+      var alternativeVideoId = alternativeVideoIds[dayIndex][exerciseIndex];
+      var muscleTarget = exerciseTargets[dayIndex][exerciseIndex];
+      var alternativeTarget = alternativeTargets[dayIndex][exerciseIndex];
+      return '<article class="exercise">' +
+        '<div class="exercise-body"><div class="exercise-title"><h3>' + ex[0] + ' <span class="english">' + ex[1] + '</span></h3><span class="target-badge"><b>يستهدف</b> ' + muscleTarget + '</span></div>' +
+        '<div class="dose"><b>' + ex[2] + '</b><b>راحة ' + ex[3] + '</b></div>' +
+        '<p class="tip">' + ex[4] + '</p><p class="mistake">⚠️ الغلطة الشائعة: ' + ex[5] + '</p><p class="alternative">لو الجهاز مشغول: ' + ex[6] + '.</p></div>' +
+        '<div class="video-pair" aria-label="فيديو التمرين الأصلي وفيديو البديل">' +
+          '<div class="video-card"><div class="video-label"><strong>التمرين الأصلي</strong><span class="video-copy"><span>' + ex[0] + '</span><small class="video-target">' + muscleTarget + '</small></span></div><div class="video"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/' + ex[7] + '?rel=0&amp;playsinline=1" title="فيديو التمرين الأصلي: ' + ex[0] + ' ' + ex[1] + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div>' +
+          '<div class="video-card alternative-video"><div class="video-label"><strong>البديل</strong><span class="video-copy"><span>' + ex[6] + '</span><small class="video-target">' + alternativeTarget + '</small></span></div><div class="video"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/' + alternativeVideoId + '?rel=0&amp;playsinline=1" title="فيديو التمرين البديل: ' + ex[6] + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div>' +
+        '</div>' +
+        '<div class="track"><label class="weight-label" for="' + id + '">وزنك اليوم <input id="' + id + '" type="number" min="0" step="0.5" inputmode="decimal" placeholder="كجم" aria-label="الوزن المستخدم في ' + ex[0] + '"></label><button class="done-btn" type="button" aria-pressed="false">✓ تم</button></div>' +
+      '</article>';
+    }
+
+    var tabs = document.getElementById('tabs');
+    var panels = document.getElementById('panels');
+    var dayButtons = [];
+    var dayPanels = [];
+
+    days.forEach(function(day, i) {
+      var button = document.createElement('button');
+      button.className = 'tab'; button.id = 'tab-' + i; button.type = 'button'; button.role = 'tab';
+      button.setAttribute('aria-controls', 'panel-' + i); button.setAttribute('aria-selected', i === 0 ? 'true' : 'false');
+      var parts = day.tab.split(' — ');
+      button.innerHTML = parts[0] + '<span>' + parts.slice(1).join(' — ') + ' • ' + day.targets + '</span>';
+      tabs.appendChild(button);
+      dayButtons.push(button);
+
+      var panel = document.createElement('section');
+      panel.className = 'panel' + (i === 0 ? ' active' : ''); panel.id = 'panel-' + i; panel.role = 'tabpanel'; panel.setAttribute('aria-labelledby', button.id);
+      panel.innerHTML = '<header class="day-head"><h2>' + day.title + '</h2><p class="targets">' + day.targets + '</p><div class="warmup"><strong>إحماء اليوم:</strong> ' + day.warmup + '<br><button type="button" class="stretch-link" data-goto-stretch="pre">فيديوهات إطالات قبل التمرين</button></div></header><div class="cards">' + day.exercises.map(function(ex, j) { return exerciseCard(ex, i, j); }).join('') + '</div><section class="cooldown"><h3>التهدئة بعد التمرين — 5 دقائق</h3><p>' + cooldowns[i] + '</p><p class="hold">ثبات 20–30 ثانية لكل إطالة بدون ألم.</p><button type="button" class="stretch-link" data-goto-stretch="post">فيديوهات إطالات بعد التمرين</button></section>';
+      panels.appendChild(panel);
+      dayPanels.push(panel);
+    });
+
+    var preStretches = [
+      ["إطالات الجسم كله قبل التمرين — Jeff Cavaliere","5 Min Whole Body Stretch Routine (PRE-WORKOUT STRETCH) — ATHLEAN-X","5 دقائق — مرة واحدة قبل التمرين","روتين Jeff Cavaliere (ATHLEAN-X) لتجهيز الجسم كله قبل الحديد — ده الفيديو الوحيد قبل التمرين: نفّذه بعد المشي الخفيف وقبل أول تمرين.","AGj7wEn1jLo"]
+    ];
+
+    var postStretches = [
+      ["خمس إطالات للمرونة — Jeff Cavaliere","90% People Become Flexible With These 5 Stretches! — ATHLEAN-X","روتين واحد — بعد التمرين والعضلات دافئة","روتين Jeff Cavaliere (ATHLEAN-X) لإطالات ثابتة للجسم كله: Door Splat وKneeling Door Splat وHamstring Hinge and Reach وThoracic Reach Through وKneeling Sweep and Reach — ده الفيديو الوحيد بعد التمرين، ونفّذ كل إطالة برفق وثبات من غير ما تضغط على نفسك.","sa0cbFSizjg"]
+    ];
+
+    function stretchCard(s) {
+      return '<article class="exercise">' +
+        '<div class="exercise-body"><div class="exercise-title"><h3>' + s[0] + ' <span class="english">' + s[1] + '</span></h3></div>' +
+        '<div class="dose"><b>' + s[2] + '</b></div>' +
+        '<p class="tip">' + s[3] + '</p></div>' +
+        '<div class="video-single"><div class="video-label"><strong>فيديو الإطالة</strong><span class="video-copy"><span>' + s[0] + '</span></span></div><div class="video"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/' + s[4] + '?rel=0&amp;playsinline=1" title="فيديو إطالة: ' + s[0] + ' ' + s[1] + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div>' +
+      '</article>';
+    }
+
+    var stretchHtml = '' +
+      '<section class="panel" id="panel-stretch" role="tabpanel" aria-labelledby="tab-stretch">' +
+        '<header class="day-head"><h2>الاسترتشات — قبل التمرين وبعده</h2><p class="targets">إطالات ديناميكية متحركة قبل التمرين • إطالات ثابتة بعد التمرين</p><div class="warmup"><strong>القاعدة:</strong> قبل التمرين حرّك المفصل ولا تثبّت الإطالة طويلاً، وبعد التمرين ثبّت كل إطالة 20–30 ثانية بدون ألم وبدون نطّ. إطالات الكتف دايماً برفق — وأي ألم حاد وقّف فوراً.</div></header>' +
+        '<div class="stretch-group-head" id="stretch-pre"><h3>قبل التمرين — فيديو واحد فقط</h3><p>5 دقائق قبل التمرين: روتين واحد من Jeff Cavaliere لتجهيز الجسم كله، بعد المشي الخفيف وقبل أول تمرين.</p></div>' +
+        '<div class="cards">' + preStretches.map(stretchCard).join('') + '</div>' +
+        '<div class="stretch-group-head post" id="stretch-post"><h3>بعد التمرين — فيديو واحد فقط</h3><p>روتين واحد بعد التمرين والعضلات دافئة — إطالات ثابتة برفق، وثبّت كل إطالة 20–30 ثانية من غير ألم وبدون نطّ. أي ألم حاد وقّف فوراً، خصوصاً في إطالات الكتف.</p></div>' +
+        '<div class="cards">' + postStretches.map(stretchCard).join('') + '</div>' +
+      '</section>';
+
+    var stretchButton = document.createElement('button');
+    stretchButton.className = 'tab stretch-tab'; stretchButton.id = 'tab-stretch'; stretchButton.type = 'button'; stretchButton.role = 'tab'; stretchButton.setAttribute('aria-controls','panel-stretch'); stretchButton.setAttribute('aria-selected','false');
+    stretchButton.innerHTML = 'الاسترتشات<span>Stretching • قبل التمرين وبعده — بالفيديو</span>';
+    tabs.appendChild(stretchButton);
+    panels.insertAdjacentHTML('beforeend', stretchHtml);
+
+    var elbowRehab = [
+      ["ثبات أيزومتري لمدّ الرسغ — بداية تسكين الألم","Isometric Wrist Extension Hold","ثبات 30–45 ثانية × 4–5 مرات — يومياً","ساعدك على طاولة وكفك لتحت وبره حافة الطاولة، امسك وزناً خفيفاً واثبت والرسغ مرفوع قليلاً من غير أي حركة. دي أول خطوة لما الألم قوي: بتسكّن الألم وبتحمّل الوتر بأمان.","VX11nNxXaCA"],
+      ["إطالة عضلات الساعد الباسطة","Wrist Extensor Stretch","ثبات 30 ثانية × 3 مرات — 2–3 مرات يومياً","دراعك مفرود قدامك وكفك لتحت، وبالإيد التانية اثنِ رسغك لتحت بهدوء لحد ما تحس بشد مريح فوق الساعد. الكوع يفضل مفرود طول الإطالة.","3CUWmJOD_cY"],
+      ["إطالة عضلات الساعد الثنية","Wrist Flexor Stretch","ثبات 30 ثانية × 3 مرات — يومياً","دراعك مفرود وكفك لفوق، وبالإيد التانية اسحب صوابعك لتحت بهدوء لحد شد تحت الساعد. بتوازن مرونة الجهتين وبتقلل الشد على الكوع.","0oQeKbFF3gQ"],
+      ["تقوية انحرافية للكوع بالدمبل","Eccentric Elbow Strengthening","3 مجموعات × 15 عدة — مرة يومياً","ساعدك مسنود وكفك لتحت بوزن خفيف (نصف كيلو وتزوّد بالتدريج): ارفع رسغك بمساعدة الإيد السليمة، وانزل بيه لوحدك ببطء في 3–5 ثوانٍ. النزول البطيء ده هو اللي بيبني الوتر من جديد.","ZroW4ten1Ww"],
+      ["تمرين تايلر تويست بالفليكس بار","Tyler Twist — FlexBar","10–15 عدة × 3 مرات يومياً","بالعصاية المطاطية FlexBar: امسكها بالإيد المصابة والرسغ في أقصى مدّ، لفّها بالإيد السليمة، ومد دراعيك قدامك، وبعدين سيبها تفك ببطء بالإيد المصابة. من أقوى التمارين المثبتة بحثياً لكوع التنس — ابدأ بأخف مقاومة.","eLINq7_lQOA"],
+      ["برنامج إعادة تأهيل كامل لكوع التنس","Tennis Elbow Rehab — Physiotutors","روتين متابعة — حسب تعليمات الفيديو","فيديو من أخصائيي Physiotutors بيجمع مدّ الرسغ بالدمبل انحرافياً، وتمرين الفليكس بار، وتدوير الساعد بالرباط — برنامج التقوية الكامل في مكان واحد للمتابعة.","Lf695_IJO8g"]
+    ];
+
+    var shoulderRehab = [
+      ["تمرين البندول — تحريك لطيف للمفصل","Pendulum Exercise (Codman)","1–2 دقيقة في كل اتجاه — 2–3 مرات يومياً","انحنِ لقدام واسند بالإيد السليمة على طاولة، وسيب الدراع المصاب يتدلى مرتاحاً، وحرّكه بحركة جسمك في دوائر صغيرة من غير ما تشد بعضلات الكتف. بيحرّك المفصل بلطف وبيقلل الألم في بداية العلاج.","-37fDuC83DQ"],
+      ["إطالة عبر الجسم — المحفظة الخلفية للكتف","Cross-Body Shoulder Stretch","ثبات 20–30 ثانية × 3 مرات — يومياً","قرّب دراعك المصاب على صدرك على ارتفاع الكتف، واسنده بالإيد التانية من فوق الكوع واسحبه بهدوء. شدّ المحفظة الخلفية بيضيّق مساحة الانحشار وبيتعّب رفع الدراع.","TOCcgbqzq5g"],
+      ["تدوير خارجي بالرباط — تقوية الكفة المدوّرة","External Rotation with Resistance Band","10–15 عدة × 2–3 مجموعات — يوم بعد يوم","رباط على ارتفاع الكوع، كوعك مثني 90 درجة ولاصق في جنبك (حط فوطة صغيرة بين الكوع والجسم)، ولف ساعدك لبره ببطء وارجع بتحكم. أهم تمرين لتقوية العضلات اللي بتثبّت عظمة الدراع وبتبعدها عن الانحشار.","y8WKcz0vqzg"],
+      ["تدوير خارجي مسنود بالدمبل","Supported External Rotation with Dumbbell","12–20 عدة × 2–3 مجموعات — يوم بعد يوم","قاعد جنب طاولة وكوعك مسنود عليها ومثني 90 درجة، بدمبل خفيف جداً (نصف كيلو)، لف ساعدك لبره وارجع ببطء. السند بيخلي الحركة أنضف وبيحمّل الكفة المدوّرة بأمان.","X_ssXl7trVM"],
+      ["روتين انحشار الكتف الكامل — متابعة","Shoulder Impingement Exercises — Ask Doctor Jo","روتين متابعة كامل — يوم بعد يوم","روتين أخصائية علاج طبيعي بيجمع التدوير الداخلي والخارجي بالرباط وتمارين تثبيت الكتف خطوة بخطوة — اتبعه كجلسة علاج كاملة.","PP9wnU82lY4"],
+      ["إصلاح الانحشار — تحريك ولوح الكتف","Fix Shoulder Impingement — 3 Exercises","حسب تعليمات الفيديو — 2–3 مرات أسبوعياً","3 تمارين من أخصائي علاج طبيعي: تحريك خلفي للمفصل بالرباط لفتح مساحة تحت عظمة الكتف، وتمارين تحكم في لوح الكتف — لأن وضعية لوح الكتف نصف علاج الانحشار.","8-dTSLnsF6I"]
+    ];
+
+    function physioCard(s) {
+      return '<article class="exercise">' +
+        '<div class="exercise-body"><div class="exercise-title"><h3>' + s[0] + ' <span class="english">' + s[1] + '</span></h3></div>' +
+        '<div class="dose"><b>' + s[2] + '</b></div>' +
+        '<p class="tip">' + s[3] + '</p></div>' +
+        '<div class="video-single"><div class="video-label"><strong>فيديو توضيحي</strong><span class="video-copy"><span>' + s[0] + '</span></span></div><div class="video"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/' + s[4] + '?rel=0&amp;playsinline=1" title="فيديو علاج طبيعي: ' + s[0] + ' ' + s[1] + '" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div></div>' +
+      '</article>';
+    }
+
+    var physioHtml = '' +
+      '<section class="panel" id="panel-physio" role="tabpanel" aria-labelledby="tab-physio">' +
+        '<header class="day-head"><h2>العلاج الطبيعي — تمارين تعملها بنفسك</h2><p class="targets">كوع التنس Tennis Elbow • انحشار الكتف Shoulder Impingement</p><div class="warmup"><strong>قواعد الأمان:</strong> اشتغل في حدود ألم خفيف محتمل (لحد 3 من 10) ولازم يهدى خلال 24 ساعة — ألم حاد أو بيزيد يوم بعد يوم = وقّف وراجع مختصاً. التقدم بالتدريج أسبوع بعد أسبوع، والتحسن الحقيقي بياخد 6–12 أسبوع من الالتزام. وقت الإصابة قلّل أو وقّف مؤقتاً أي تمرين حديد بيولّع الألم (ضغط الكتف فوق الرأس والأحمال اللي بتتعب الكوع)، وحط تلج 15 دقيقة بعد الجلسة لو في ألم.</div></header>' +
+        '<div class="stretch-group-head" id="physio-elbow"><h3>1) كوع التنس — Tennis Elbow</h3><p>ألم في الناحية الخارجية للكوع بيزيد مع مسك الحاجة ومدّ الرسغ. الترتيب: تسكين بالثبات والإطالات أولاً، وبعدين تقوية انحرافية بطيئة — ودي قلب العلاج. نفّذ البرنامج على الجهة المصابة.</p></div>' +
+        '<div class="cards">' + elbowRehab.map(physioCard).join('') + '</div>' +
+        '<div class="stretch-group-head post" id="physio-shoulder"><h3>2) انحشار الكتف — Shoulder Impingement Syndrome</h3><p>ألم قدام الكتف أو من الجنب بيظهر وانت بترفع دراعك. العلاج: تحريك لطيف وإطالة خلفية، وبعدين تقوية الكفة المدوّرة ولوح الكتف عشان تفتح مساحة تحت عظمة الكتف. تجنّب رفع أوزان فوق الرأس لحد ما الألم يهدى.</p></div>' +
+        '<div class="cards">' + shoulderRehab.map(physioCard).join('') + '</div>' +
+      '</section>';
+
+    var physioButton = document.createElement('button');
+    physioButton.className = 'tab physio-tab'; physioButton.id = 'tab-physio'; physioButton.type = 'button'; physioButton.role = 'tab'; physioButton.setAttribute('aria-controls','panel-physio'); physioButton.setAttribute('aria-selected','false');
+    physioButton.innerHTML = 'العلاج الطبيعي<span>Physio • كوع التنس + انحشار الكتف — بالفيديو</span>';
+    tabs.appendChild(physioButton);
+    panels.insertAdjacentHTML('beforeend', physioHtml);
+
+    var cardioButton = document.createElement('button');
+    cardioButton.className = 'tab cardio-tab'; cardioButton.id = 'tab-cardio'; cardioButton.type = 'button'; cardioButton.role = 'tab'; cardioButton.setAttribute('aria-controls','panel-cardio'); cardioButton.setAttribute('aria-selected','false');
+    cardioButton.innerHTML = 'الكارديو<span>Cardio • يومياً وبعد التمرين</span>';
+    tabs.appendChild(cardioButton);
+    panels.insertAdjacentHTML('beforeend', cardioHtml);
+
+    var foodButton = document.createElement('button');
+    foodButton.className = 'tab food-tab'; foodButton.id = 'tab-food'; foodButton.type = 'button'; foodButton.role = 'tab'; foodButton.setAttribute('aria-controls','panel-food'); foodButton.setAttribute('aria-selected','false');
+    foodButton.innerHTML = 'جدول الأكل<span>1750 Calories</span>';
+    tabs.appendChild(foodButton);
+    panels.insertAdjacentHTML('beforeend', foodHtml);
+
+    var taichiHtml = '' +
+      '<section class="panel taichi" id="panel-taichi" role="tabpanel" aria-labelledby="tab-taichi">' +
+        '<div class="taichi-body">' +
+          '<h2 id="taichi-title">تاي تشي <span class="english">Tai Chi</span> — مرونة الجسم في الحركة</h2>' +
+          '<p>ده مش إطالة لعضلة مشدودة — ده حركة بطيئة ومتصلة للجسم كله: المفاصل بتتحرك بسلاسة، مع توازن وتنفس هادي مع الحركة. خفيف على الجسم ومناسب جنب تمرين الحديد.</p>' +
+          '<p class="taichi-meta"><strong>تاي تشي للمبتدئين — Yang 24</strong> مع <span dir="ltr">Chris Pei</span> • 12 دقيقة • بيشرح الفورم خطوة بخطوة للمبتدئين.</p>' +
+          '<div class="dose" aria-label="إرشادات التاي تشي"><b>3–4 مرات أسبوعياً</b><b>10–12 دقيقة</b><b>الصبح أو بعد التمرين</b></div>' +
+          '<p class="taichi-meta">ابدأ بأول 3–4 حركات بس في أول أسبوعين، وبعدين زوّد واحدة واحدة — متحاولش تحفظ الفورم كله مرة واحدة. ركبك مثنية شوية، ضهرك مفرود، والحركة بطيئة من غير استعجال.</p>' +
+        '</div>' +
+        '<div class="video"><iframe loading="lazy" src="https://www.youtube-nocookie.com/embed/R8NbQecDygQ?rel=0&amp;playsinline=1" title="فيديو تاي تشي للمبتدئين — Yang 24 مع Chris Pei" allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share" referrerpolicy="strict-origin-when-cross-origin" allowfullscreen></iframe></div>' +
+        '<div class="taichi-body"><a class="taichi-link" href="https://www.youtube.com/watch?v=R8NbQecDygQ" target="_blank" rel="noopener">افتح الفيديو على يوتيوب ↗</a></div>' +
+      '</section>';
+
+    var taichiButton = document.createElement('button');
+    taichiButton.className = 'tab taichi-tab'; taichiButton.id = 'tab-taichi'; taichiButton.type = 'button'; taichiButton.role = 'tab'; taichiButton.setAttribute('aria-controls','panel-taichi'); taichiButton.setAttribute('aria-selected','false');
+    taichiButton.innerHTML = 'تاي تشي<span>Tai Chi • مرونة الجسم في الحركة</span>';
+    tabs.appendChild(taichiButton);
+    panels.insertAdjacentHTML('beforeend', taichiHtml);
+
+    function activateTab(button, skipScroll) {
+      document.querySelectorAll('.tab').forEach(function(tab) { tab.setAttribute('aria-selected','false'); });
+      document.querySelectorAll('.panel').forEach(function(panel) { panel.classList.remove('active'); });
+      button.setAttribute('aria-selected','true');
+      document.getElementById(button.getAttribute('aria-controls')).classList.add('active');
+      if (!skipScroll) window.scrollTo({ top: document.querySelector('.tabs-wrap').offsetTop, behavior: 'smooth' });
+    }
+
+    document.addEventListener('click', function(e) {
+      var link = e.target.closest('[data-goto-stretch]');
+      if (!link) return;
+      activateTab(stretchButton, true);
+      var target = document.getElementById(link.getAttribute('data-goto-stretch') === 'pre' ? 'stretch-pre' : 'stretch-post');
+      if (target) target.scrollIntoView({ behavior: 'smooth', block: 'start' });
+    });
+
+    var weekdayNames = ['الأحد','الاثنين','الثلاثاء','الأربعاء','الخميس','الجمعة','السبت'];
+    var monthNames = ['يناير','فبراير','مارس','أبريل','مايو','يونيو','يوليو','أغسطس','سبتمبر','أكتوبر','نوفمبر','ديسمبر'];
+
+    function updateClock() {
+      var el = document.getElementById('today-clock');
+      if (!el) return;
+      var now = new Date();
+      var h = now.getHours();
+      var m = now.getMinutes();
+      var suffix = h < 12 ? 'AM' : 'PM';
+      var h12 = h % 12;
+      if (h12 === 0) h12 = 12;
+      el.textContent = h12 + ':' + (m < 10 ? '0' : '') + m + ' ' + suffix;
+    }
+
+    function markToday() {
+      var now = new Date();
+      var jsDay = now.getDay();
+      var idx = jsDay === 0 ? -1 : jsDay - 1;
+      var banner = document.getElementById('today-banner');
+      var dateText = weekdayNames[jsDay] + ' ' + now.getDate() + ' ' + monthNames[now.getMonth()] + ' ' + now.getFullYear();
+      var sessionText = idx >= 0 ? 'تمرين اليوم: ' + days[idx].title.split(' — ').slice(1).join(' — ') : 'اليوم يوم راحة — مشي خفيف ونوم كافٍ';
+      banner.innerHTML = '<span class="today-date">اليوم: ' + dateText + '</span><span class="today-session">' + sessionText + '</span><span class="today-clock" id="today-clock"></span>';
+
+      dayButtons.forEach(function(b) {
+        b.classList.remove('today');
+        var p = b.querySelector('.today-pill');
+        if (p) p.remove();
+      });
+      dayPanels.forEach(function(pn) {
+        pn.querySelector('.day-head').classList.remove('today-head');
+        var p = pn.querySelector('.day-head .today-pill');
+        if (p) p.remove();
+      });
+      var rest = document.getElementById('rest-day');
+      rest.classList.remove('today-rest');
+      var rp = rest.querySelector('.today-pill');
+      if (rp) rp.remove();
+
+      if (idx >= 0) {
+        var b = dayButtons[idx];
+        b.classList.add('today');
+        var pill = document.createElement('span');
+        pill.className = 'today-pill';
+        pill.textContent = 'اليوم';
+        b.insertBefore(pill, b.firstChild);
+        var head = dayPanels[idx].querySelector('.day-head');
+        head.classList.add('today-head');
+        var hp = document.createElement('span');
+        hp.className = 'today-pill';
+        hp.textContent = 'تمرين اليوم';
+        head.querySelector('h2').appendChild(hp);
+      } else {
+        rest.classList.add('today-rest');
+        var rpill = document.createElement('span');
+        rpill.className = 'today-pill';
+        rpill.textContent = 'اليوم';
+        rest.querySelector('h2').appendChild(rpill);
+      }
+      updateClock();
+      return idx;
+    }
+
+    var initialToday = markToday();
+    if (initialToday >= 0) activateTab(dayButtons[initialToday], true);
+    var lastDate = new Date().getDate();
+    setInterval(function() {
+      updateClock();
+      var d = new Date();
+      if (d.getDate() !== lastDate) {
+        lastDate = d.getDate();
+        markToday();
+      }
+    }, 20000);
+
+    tabs.addEventListener('click', function(e) {
+      var button = e.target.closest('.tab');
+      if (button) activateTab(button);
+    });
+
+    document.addEventListener('click', function(e) {
+      var button = e.target.closest('.done-btn');
+      if (!button) return;
+      var done = button.getAttribute('aria-pressed') !== 'true';
+      button.setAttribute('aria-pressed', done ? 'true' : 'false');
+      button.classList.toggle('done', done);
+      button.textContent = done ? '✓ خلصت' : '✓ تم';
+    });
+  
+    document.querySelectorAll('.video iframe').forEach(function(f) {
+      var m = (f.getAttribute('src') || '').match(/embed\/([^?&"]+)/);
+      if (!m) return;
+      var a = document.createElement('a');
+      a.className = 'video-link';
+      a.href = 'https://www.youtube.com/watch?v=' + m[1];
+      a.target = '_blank';
+      a.rel = 'noopener';
+      a.setAttribute('aria-label', f.getAttribute('title') || 'فيديو');
+      a.innerHTML = '<img src="https://i.ytimg.com/vi/' + m[1] + '/hqdefault.jpg" alt="" loading="lazy" onerror="this.remove()"><span class="shade"></span><span class="play">&#9654;</span><small>يفتح على يوتيوب</small>';
+      f.parentNode.replaceChild(a, f);
+    });
+</script>
+</body>
+</html>
